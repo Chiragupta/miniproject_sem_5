@@ -1,0 +1,493 @@
+def check_conjunction(x,word,pos):
+    from textblob import TextBlob
+    blob=TextBlob(para[int(x)])
+    x=0
+    y=0
+    r=0
+    for words, pos in blob.tags:
+        if(words!='&'):
+            #print(words,'))))))))')
+            if(pos=='CC'):
+                #print(words,'++++++')
+                r=1
+            if(x==0):
+                z=pos
+                x=1
+            if(y<x):
+                pos1=z
+                y=y+1
+            x=x+1
+            z=pos
+            if(pos1=='CC' and (words==word)):
+                in_between(i,word,pos1)
+                c=1
+                break
+            elif(pos1!='CC' and (words==word and int(r)==1)):
+                in_between(i,word,'CC')
+                c=1
+                break
+            elif(pos1!='CC' and (words==word and int(r)!=1)):
+                c=0
+                break
+    if(c==0):
+        in_between(x,word,'x')
+
+
+        
+def in_between(i,word1,pos1):
+    c=0
+    from textblob import TextBlob
+    blo1=TextBlob(para[int(pronoun[i])])
+    if(pos1=='CC'):
+        if(word1=='it' or word1=='It'):
+            for words, pos in blo1.tags:
+                if(pos=='NNP' or pos=='NN' or pos=='NNPS'):
+                    x=str.lower(words)
+                    c=1;
+                if(words==word1):
+                    break
+        elif(word1=='he' or word1=='He'or word1=='we' or word1=='We' or word=='My' or word=='my' or  word1=='she' or word1=='She' or word1=='it' or word1=='It' or word1=='they' or word1=='They' or word1=='him' or word1=='Him'):
+            for words, pos in blo1.tags:
+                if(pos=='NNP' or pos=='NN' or pos=='NNPS'):
+                    x=str.lower(words)
+                    c=1;
+                    break
+                else:
+                    c=2;
+                    print("CAN NOT BE DETERMINED")
+                    #Eff("CAN NOT BE DETERMINED")
+                    break
+    else:
+        for word, pos in blo1.tags:
+            if(pos=='NNP' or pos=='NN' or pos=='NNPS'):
+                x=str.lower(word)
+                c=1
+                break
+            if(pos=='PRP' or pos=='PRP$' or pos=='WP' or pos=='WDT'):
+                c=0
+                break
+        blo=TextBlob(para[int(pronoun[i])-1])
+        if(c==0 and (word1=='he' or word1=='He' or  word1=='I' or word1=='i' or word1=='my' or word=='My' or word1=='she' or word1=='She' or word1=='they' or word1=='They' or word=='we' or word=='We')):
+            for word, pos in blo.tags:
+                #print(word,'---------',pos)
+                if(pos=='NNP' or pos=='NN' or pos=='NNPS' or pos=='NNS'):
+                    x=str.lower(word)
+                    #c=1
+                    break
+            
+                
+                    
+        elif(c==0 and (word1=='it' or word1=='It')):
+            x1=0
+            y1=0
+            for word, pos in blo.tags:
+                if(x1==0):
+                    z=pos
+                    x1=1
+                if(y1 < x1):
+                    pos1=z
+                    y1=y1+1
+                x1=x1+1
+                z=pos
+                if(pos=='NNP' or pos=='NN' or pos=='NNPS'):
+                    x=str.lower(word)
+                elif(pos=='IN' and (pos1=='NN' or pos1=='NNP' or pos=='NNPS')):
+                    break
+    if(c!=2):
+        c=0
+    for y in noun_list:
+        if c!=2:
+            if str.lower(y) == x:
+                c=1
+                break
+    if(c == 1):
+        print(x)
+        #Eff(x)
+    elif(c!=2):
+        print("NO NOUN AVAILABLE")
+        #Eff("NO NOUN AVAILABLE")
+
+
+    
+def manipulation():
+    length=int(len(pronoun))
+    b=0
+    i=0
+    words=[]
+    position=[]
+    while i<(length):
+        from textblob import TextBlob
+        blob=TextBlob(para[int(pronoun[i])])
+        #print(i,'%%%%%%%%')
+        for word, pos in blob.tags:
+            #print(word,'kkkkk',pos)
+            if(word=='i' or word=='My' or word=='We' or word=='Me' or word=='Mine'):
+                pos='PRP'
+            if((word == pronoun[i+1]) and (pos!='PRP' and pos!='PRP$' and pos!='WP' and pos!='WDT')):
+                print(word,"\t is NOT A pronoun",' -> ',pos)
+                #Eff("NOT A pronoun")
+                i=i+2
+                break
+            elif((word == pronoun[i+1]) and (pos=='PRP' or pos=='PRP$' or pos=='WP' or pos=='WDT')):
+                #print(word,  pronoun[i+1], '&&&&')
+                if(word=='I' or word=='my' or word=='My' or word=='mine' or word=='Mine' or word=='our' or word=='ours' or word=='Our' or word=='Ours' or word=='me' or word=='Me'):
+                    c=0
+                    if(word=='I' or word=='i' or word=='My' or word=='my' or word=='me' or word=='Me' or word=='Mine' or word=='mine'):
+                        x=0
+                        s=[]
+                        while(x<N):
+                            #print(para[x])
+                            blob=TextBlob(para[x])
+                            for word , pos in blob.tags:
+                                #print(word,'////',pos)
+                                if(word=='I' or word=='i' or word=='My' or word=='my'):
+                                    c=1
+                                elif(c==1):
+                                    if(pos=='NN' or pos=='NNP' or pos=='NNPS'):
+                                        s=s+[word]
+                            if(c==0):
+                                x+=1
+                            elif(c==1):
+                                break
+                        c=0
+                        #print(s)
+                        for S in s:
+                            for y in noun_list:
+                                #print(S,'....',y)
+                                if str.lower(y) == str.lower(S):
+                                    #print('========')
+                                    #print(y,'=====',S)
+                                    c=1
+                                    break
+                            if(c==1):
+                                break
+                        if(c == 1):
+                            print(S)
+                        else:
+                            print("NO NOUN AVAILABLE")
+                    else:
+                        print("CAN NOT BE DETERMINED")
+                    i+=2
+                    break
+                elif(word=='we' or word=='We' or word=='us' or word=='Us'):
+                    q=0
+                    for words, pos in blob.tags:
+                        if(q==1 and (pos=='NN' or pos=='NNP' or pos=='NNPS')):
+                            print(words)
+                            #Eff(words)
+                            i=i+2
+                            break
+                        elif(q==1 and (pos!='NN' or pos!='NNP' or pos!='NNPS')):
+                            check_conjunction(pronoun[i],word,pos)
+                            i=i+2
+                            break
+                        if(word=='we' or word=='We' or word=='us' or word=='Us'):
+                            q=1;
+                    break
+                elif(word=='you' or word=='You'):
+                    for word, pos in blob.tags:
+                        if(word=='your'):
+                            print("no noun")
+                            #Eff("no noun")
+                            i=i+2
+                            break;
+                        elif(word=='You' or word=='you'):
+                            q=0
+                            for word, pos in blob.tags:
+                                if(q==1 and (pos=='NN' or pos=='NNP' or pos=='NNPS')):
+                                    print(word)
+                                    #Eff(word)
+                                    break;
+                                elif(q==1 and (pos!='NN' or pos!='NNP' or pos=='NNPS' )):
+                                    break;
+                                elif(word=='you' or word=='You'):
+                                    q=1
+                                
+                        elif pos=='NNP' or pos=='NNPS' :
+                            c=0
+                            x=str.lower(word)
+                            for y in noun_list:
+                                if str.lower(y)==x:
+                                    c=1
+                                    break
+                            if(c==1):
+                                print(x)
+                                #Eff(x)
+                            else:
+                                print("NO NOUN AVAILABLE")
+                                #Eff("NO NOUN AVAILABLE")
+                            break
+                    break
+                elif(word=='he' or word=='He' or word=='she' or word=='She' or word=='it' or word=='It' or word=='they' or word=='They'):
+                    check_conjunction(pronoun[i],word,pos)
+                    i=i+2
+                    break
+                elif(word=='his' or word=='His' or word=='him' or word=='Him' or word=='her' or word=='Her' or word=='their' or word=='Their' or word=='hers' or word=='Hers'):
+                    for word, pos in blob.tags:
+                        if(pos=='NNP' or pos=='NNPS' or pos=='NP'):
+                            c=0
+                            x=str.lower(word)
+                            for y in noun_list:
+                                if(x==str.lower(y)):
+                                    c=1
+                                    break
+                            if(c==1):
+                                print(x)
+                                #Eff(x)
+                            else:
+                                print("NO NOUN AVAILABLE")
+                                #Eff("NO NOUN AVAILABLE")
+                            break
+                        elif(word=='he' or word=='He' or word=='she' or word=='She'):
+                            check_conjunction(pronoun[i],word,pos)
+                            break
+                        #else:
+                            #print("CAN NOT BE DETERMINED")
+                            #break
+                    i+=2
+                    break
+                elif(word=='their' or word=='Their'):
+                    for word, pos in blob.tags:
+                        if(pos=='NNP' or pos=='NNPS'):
+                            c=0
+                            x=str.lower(word)
+                            for y in noun_list:
+                                if(x==str.lower(y)):
+                                    c=1
+                                    break
+                            if(c==1):
+                                print(x)
+                                #Eff(x)
+                            else:
+                                print("NO NOUN AVAILABLE")
+                                #Eff("NO NOUN AVAILABLE")
+                            i=i+2
+                            break
+                        elif(word=='they' or word=='They'):
+                            check_conjunction(pronoun[i],word,pos)
+                            i=i+2
+                            break
+                    break
+                elif(word=='its' or word=='Its'):
+                    for word, pos in blob.tags:
+                        if(pos=='NN'):
+                            c=0
+                            x=str.lower(word)
+                            for y in noun_list:
+                                if(x==str.lower(y)):
+                                    c=1
+                                    break
+                            if(c==1):
+                                print(x)
+                                #Eff(x)
+                            else:
+                                print("NO NOUN AVAILABLE")
+                                #Eff("NO NOUN AVAILABLE")
+                            i=i+2
+                            break
+                        elif(word=='it' or word=='It'):
+                            check_conjunction(pronoun[i],word,pos)
+                            i=i+2
+                            break
+                    break
+                elif(word=='who' or word=='Whom' or word=='Who' or word=='whom' or word=='which' or word=='Which' or word=='that' or word=='That'):
+                    j=0
+                    words=[]
+                    position=[]
+                    for word, pos in blob.tags:
+                        #print(word,'----', pos)
+                        if(word!='&'):
+                            #print('+++++')
+                            words=words+[word]
+                            position=position+[pos]
+                            j=j+1
+                        if(word=='who' or word=='whom' or word=='Who' or word=='Whom' or word=='which' or word=='Which' or word=='that' or word=='That'):
+                            break
+                    #print(len(position))
+                    if(j==1):
+                        bl=TextBlob(para[(pronoun[i]-1)])
+                        for words, pos in bl.tags:
+                            if(pos=='NNP' or pos=='NN' or pos=='NNPS'):
+                                x=str.lower(words)
+                                #print(x,'*****')
+                        print(x)
+                    #print(position[j-2],'99999',words[j-1])
+                    elif((position[j-2]=='NNP' or position[j-2]=='NNPS' or position[j-2]=='NN') and (words[j-1]=='who' or words[j-1]=='whom' or words[j-1]=='Who' or words[j-1]=='Whom' or words[j-1]=='which' or words[j-1]=='Which' or words[j-1]=='that' or words[j-1]=='That')):
+                        c=0
+                        #print('+++++')
+                        for word in noun_list:
+                            if(str.lower(word)==str.lower(words[j-2])):
+                                c=1
+                                if(c==1):
+                                    print(words[j-2])
+                                    #Eff(words[j-2])
+                                else:
+                                    print("NO NOUN AVAILABLE")
+                                    #Eff("NO NOUN AVAILABLE")
+                                break
+                    i+=2
+                    break
+                    
+                    
+                        
+                else:
+                    print("CAN NOT BE DETERMINED")
+                    #Eff("CAN NOT BE DETERMINED")
+                    i=i+2
+                break;
+
+
+a=1
+A=input(str.upper("no of files you want to analyse"))
+while(a<=int(A)):
+    a+=1
+    filename=input("enter file name")
+    file="C:\\Users\\chirag gupta\\documents\\"
+    file=file+filename
+    print(file,'\n')
+    fp = open(file,"r")
+    words=[]
+    j=0
+    i=0
+    count=0
+    k=0
+    pronoun=[]
+    para=[]
+    c=0
+    add=0
+    ins=1
+    while True:
+        if(fp.tell()==0):
+            while(True):
+                n=fp.read(1)
+                if(n=='\n'):
+                    break
+                N=int(n)
+                if(N>=0 and N<=9):
+                    add=add*10+N
+
+        N=add
+        ch=fp.read(1)
+        if i>0 and ch=='.':
+            line=line+ch
+            if(count==2):
+                #line=line+ch
+                pronoun=pronoun+[j]
+                k=k+1
+                #print('\n pro is',pro,'\n')
+                if(pro=='i'):
+                    pro='I'
+                    pronoun=pronoun+[ pro ]
+                else:
+                    pronoun=pronoun+[pro]
+                #print ('\n',pronoun[k],'\n')
+                count=0
+                k=k+1
+                c=0
+            i=i+1
+            ch=fp.read(1)
+            if(ch==' ' or ch=='\n'):
+                ch=fp.read(1)
+                if(ch=='\n'):
+                    ch=fp.read(1)
+                if(ch=='&'):
+                    para=para+[ line ]
+                    #ins=1
+                    line=ch
+                    j=j+1
+                    i=0
+                    count=count+1
+                    c=0
+                    ch=fp.read(1)
+                    if(ch=='\n'):
+                        ch=fp.read(1)
+                    i=i+1
+                elif(ch>='A' and ch<='Z' or (ch>='a' and ch<='z')):
+                    if(line[-3:-1]=="Mr" or line[-4:-1]=="Pvt" or line[-4:-1]=="Ltd"):
+                        line=line+' '
+                        line=line+ch
+                        i=i+2
+                        ch=fp.read(1)
+                        if(ch=='\n'):
+                            ch=fp.read(1)
+                    else:
+                        para=para+[ line ]
+                        j=j+1
+                        i=0
+                        count=0
+                        #print (para[j-1])
+                        line=ch
+                        i=i+1
+                        ch=fp.read(1)
+                        if(ch=='\n'):
+                            ch=fp.read(1)
+            
+        if(not ch):
+            break;
+        if i==0 and (ch!= '.' and (ch!=' ' and ch!='\n')):
+            line=ch
+            i=i+1
+            if(ch=='&'):
+                count=count+1
+        elif i>0 and (ch!='.' and ch!='&'):
+            if count==1 and c==0:
+                pro=ch
+                c=c+1
+            elif count==1 and c>0:
+                pro=pro + ch
+                #print('\n',pro)
+            elif count == 2:
+                line=line+ch
+                pronoun=pronoun+[j]
+                k=k+1
+                #print('\n pro is',pro,'\n')
+                if(pro=='i'):
+                    pro='I'
+                    pronoun=pronoun+[ pro ]
+                else:
+                    pronoun=pronoun+[pro]
+                #pronoun=pronoun+[ pro ]
+                #print ('\n',pronoun[k],'\n')
+                count=0
+                k=k+1
+                c=0
+            elif(ch=='\n'):
+                ch=' '
+            line=line+ch
+            i=i+1
+            #print (line)
+        elif(i>0 and ch=='&'):
+            line=line+ch
+            count=count+1
+            i=i+1
+        
+    #print(line)
+    l=line
+    #print(l)
+    #print(para)
+    #print(pronoun)
+    length=len(l)
+    #print(length)
+    i=0
+    count=-1
+    noun=line[i]
+    i=i+1
+    noun_list=[]
+    while i<length:
+        while True:
+            
+            if(i==length):
+                break;
+            elif(line[i]==','and i <=length):
+                i=i+1
+                break;
+            noun=noun+line[i]
+            i=i+1
+        noun_list=noun_list+[noun]
+        count=count+1
+        if(i<length and line[i-1]==','):
+            noun=line[i]
+            i=i+1
+        
+    fp.close()
+    manipulation()
